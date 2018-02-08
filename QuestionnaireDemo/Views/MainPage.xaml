@@ -1,0 +1,72 @@
+﻿<Page
+    x:Class="QuestionnaireDemo.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:QuestionnaireDemo.Helpers"
+    xmlns:vm="using:QuestionnaireDemo.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="TextBoxTemplate">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding QuestionText, Mode=OneWay}" Margin="100,20" HorizontalAlignment="Stretch" Grid.Row="0" />
+                <TextBox Text="{Binding Answer, Mode=TwoWay}" Margin="100,20" HorizontalAlignment="Stretch" Grid.Row="1"/>
+            </Grid>
+            
+        </DataTemplate>
+        <DataTemplate x:Key="CheckBoxTemplate">
+            <CheckBox Content="{Binding QuestionText, Mode=OneWay}" 
+                      Margin="100,20" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                      IsChecked="{Binding Answer, Converter={StaticResource CheckBoxConverter}, Mode=TwoWay}" />
+        </DataTemplate>
+        <DataTemplate x:Key="RadioButtonTemplate">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding QuestionText, Mode=OneWay}" Margin="100,20" HorizontalAlignment="Stretch" Grid.Row="0" />
+                <RadioButton Content="{Binding QuestionLabel1, Mode=OneWay}" 
+                             Margin="100,20" HorizontalAlignment="Stretch" Grid.Row="1" GroupName="{Binding GroupName}"
+                             Command="{Binding DataContext.RadioButtonSelectionCommand, ElementName=itemGridView}" CommandParameter="{Binding QuestionLabel1}" />
+                <RadioButton Content="{Binding QuestionLabel2, Mode=OneWay}" 
+                             Margin="100,20" HorizontalAlignment="Stretch" Grid.Row="2" GroupName="{Binding GroupName}"
+                             Command="{Binding DataContext.RadioButtonSelectionCommand, ElementName=itemGridView}" CommandParameter="{Binding QuestionLabel2}" />
+                <RadioButton Content="{Binding QuestionLabel3, Mode=OneWay}" 
+                             Margin="100,20" HorizontalAlignment="Stretch" Grid.Row="3" GroupName="{Binding GroupName}"
+                             Command="{Binding DataContext.RadioButtonSelectionCommand, ElementName=itemGridView}" CommandParameter="{Binding QuestionLabel3}" />
+            </Grid>
+        </DataTemplate>
+        <local:QuestionDataTemplateSelector x:Key="QuestionTemplateSelector"
+                TextBoxTemplate="{StaticResource TextBoxTemplate}"
+                CheckBoxTemplate="{StaticResource CheckBoxTemplate}"
+                RadioButtonTemplate="{StaticResource RadioButtonTemplate}" />
+        <local:CheckBoxConverter x:Key="CheckBoxConverter" />
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <FlipView x:Name="itemGridView" 
+                  ItemTemplateSelector="{StaticResource QuestionTemplateSelector}" 
+                  ItemsSource="{Binding Questions}"
+                  UseTouchAnimationsForAllNavigation="True"
+                  SelectedItem="{Binding CurrentQuestion, Mode=TwoWay}"
+                  Grid.ColumnSpan="2"
+                  Margin="100">
+        </FlipView>
+    </Grid>
+    
+</Page>

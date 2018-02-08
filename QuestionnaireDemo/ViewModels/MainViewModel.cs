@@ -1,6 +1,7 @@
 ﻿using QuestionnaireDemo.Helpers;
 using QuestionnaireDemo.Models;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace QuestionnaireDemo.ViewModels
 {
@@ -13,7 +14,7 @@ namespace QuestionnaireDemo.ViewModels
         }
 
         public ObservableCollection<Question> Questions { get; set; }
-
+        
         private Question currentQuestion;
         public Question CurrentQuestion
         {
@@ -32,6 +33,22 @@ namespace QuestionnaireDemo.ViewModels
             if (obj != null)
             {
                 CurrentQuestion.Answer = obj.ToString();
+
+                if (Questions.Count == 1)
+                {
+                    switch (CurrentQuestion.Answer)
+                    {
+                        case "C#":
+                            AddCSharpQuestions();
+                            break;
+                        case "Java":
+                            AddJavaQuestions();
+                            break;
+                        default:
+                            AddCPlusPlusQuestions();
+                            break;
+                    }
+                }
             }
         }
 
@@ -45,9 +62,28 @@ namespace QuestionnaireDemo.ViewModels
         private void InitializeQuestions()
         {
             Questions = new ObservableCollection<Question>();
-            Questions.Add(new Question { QuestionText = "What is your name?", AnswerType = AnswerType.Text, Answer = "" });
-            Questions.Add(new Question { QuestionText = "Subscribe to mailing list", AnswerType = AnswerType.CheckBox, Answer = "False" });
-            Questions.Add(new Question { QuestionText = "Favourite programming language", AnswerType = AnswerType.RadioButton, GroupName="A", QuestionLabel1 = "C#", QuestionLabel2="C++", QuestionLabel3="Java" });
+            Questions.Add(new Question { QuestionText = "Favourite programming language", AnswerType = AnswerType.RadioButton, GroupName = "A", QuestionLabel1 = "C#", QuestionLabel2 = "C++", QuestionLabel3 = "Java" });
+
+            CurrentQuestion = Questions.First();
+        }
+
+        private void AddCSharpQuestions()
+        {
+            Questions.Add(new Question { QuestionText = "Which popular NuGet packages do you use?", QuestionLabel1 = "Azure", QuestionLabel2 = "Newtonsoft.JSON", QuestionLabel3 = "Other libraries", AnswerType = AnswerType.CheckBox });
+            Questions.Add(new Question { QuestionText = "Which source control do you use?", QuestionLabel1 = "VSTS", QuestionLabel2 = "Git", QuestionLabel3 = "Subversion", AnswerType = AnswerType.CheckBox });
+            Questions.Add(new Question { QuestionText = "Favourite ice cream", AnswerType = AnswerType.RadioButton, GroupName = "B", QuestionLabel1 = "Chocolate", QuestionLabel2 = "Vanilla", QuestionLabel3 = "Strawberry" });
+            Questions.Add(new Question { QuestionText = "Favourite tv show", AnswerType = AnswerType.RadioButton, GroupName = "C", QuestionLabel1 = "Game of Thrones", QuestionLabel2 = "Walking Dead", QuestionLabel3 = "Flintstones" });
+
+        }
+
+        private void AddJavaQuestions()
+        {
+            Questions.Add(new Question { QuestionText = "I use Gradle for building things", AnswerType = AnswerType.CheckBox });
+        }
+
+        private void AddCPlusPlusQuestions()
+        {
+            Questions.Add(new Question { QuestionText = "I have mastered the use of pointers", AnswerType = AnswerType.CheckBox });
         }
     }
 }
